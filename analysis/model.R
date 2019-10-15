@@ -7,8 +7,8 @@ library(tidyverse)
 library(tidytext)
 
 ### Data Reading
-proFilePath = "~/Desktop/R/data/company_data/3/pro_doc_sampled.csv"
-conFilePath = "~/Desktop/R/data/company_data/3/con_doc_sampled.csv"
+proFilePath = "~/Desktop/R_js/data/pro_doc_sampled.csv"
+conFilePath = "~/Desktop/R_js/data/con_doc_sampled.csv"
 proData <- read.csv(proFilePath) 
 conData <- read.csv(conFilePath)
 
@@ -114,9 +114,24 @@ modelCon38_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Re
 
 
 ### Saving the model
-save.image('~/Desktop/R/data/stm.RData')
+save.image('~/Desktop/R_js/data/stm.RData')
 
 #A Shiny Application for STM 
 library(stminsights)
 run_stminsights()
+
+
+#Pro Model Analysis
+pro_model = modelPro26
+
+pro_beta <- tidy(pro_model) #prob that each word is generated from the topic
+pro_beta
+write_csv(pro_beta, path="~/Desktop/R_js/data/beta/pro26_beta.csv")
+
+pro_gamma <- tidy(pro_model, matrix='gamma')
+pro_gamma
+
+
+
+
 
