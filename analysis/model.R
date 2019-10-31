@@ -116,13 +116,19 @@ modelCon38_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Re
 ### Saving the model
 save.image('~/Desktop/R_js/data/stm.RData')
 
-#A Shiny Application for STM 
+# A Shiny Application for STM 
 library(stminsights)
 run_stminsights()
 
 
-#Pro Model Analysis
+### Load the model
+# models = load('~/Desktop/R_js/data/stm.RData') 
+# models
+load('~/Desktop/R_js/data/stm.RData') 
+
+# Pro Model Analysis
 pro_model = modelPro26
+pro_model
 
 pro_beta <- tidy(pro_model) #prob that each word is generated from the topic
 pro_beta
@@ -130,6 +136,19 @@ write_csv(pro_beta, path="~/Desktop/R_js/data/beta/pro26_beta.csv")
 
 pro_gamma <- tidy(pro_model, matrix='gamma')
 pro_gamma
+write_csv(pro_gamma, path="~/Desktop/R_js/data/gamma/pro26_gamma.csv")
+
+
+# Con Model Analysis
+con_model = modelCon24
+
+con_beta <- tidy(con_model) #prob that each word is generated from the topic
+con_beta
+write_csv(con_beta, path="~/Desktop/R_js/data/beta/con24_beta.csv")
+
+con_gamma <- tidy(con_model, matrix='gamma')
+con_gamma
+write_csv(con_beta, path="~/Desktop/R_js/data/beta/con24_gamma.csv")
 
 
 
