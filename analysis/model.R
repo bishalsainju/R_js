@@ -140,15 +140,15 @@ write_csv(pro_gamma, path="~/Desktop/R_js/data/gamma/pro26_gamma.csv")
 
 
 # Con Model Analysis
-con_model = modelCon24
+con_model = modelCon10
 
 con_beta <- tidy(con_model) #prob that each word is generated from the topic
 con_beta
-write_csv(con_beta, path="~/Desktop/R_js/data/beta/con24_beta.csv")
+write_csv(con_beta, path="~/Desktop/R_js/data/beta/con10_beta.csv")
 
 con_gamma <- tidy(con_model, matrix='gamma')
 con_gamma
-write_csv(con_beta, path="~/Desktop/R_js/data/beta/con24_gamma.csv")
+write_csv(con_gamma, path="~/Desktop/R_js/data/gamma/con10_gamma.csv")
 
 
 
