@@ -28,6 +28,8 @@ conProcessed <- textProcessor(conData$Px_Texts, metadata = conData, lowercase = 
 proPx <- prepDocuments(proProcessed$documents, proProcessed$vocab, proProcessed$meta)
 conPx <- prepDocuments(conProcessed$documents, conProcessed$vocab, conProcessed$meta)
 
+proPx["docs.removed"]
+conPx["docs.removed"]
 
 #### Training STM model
 
@@ -73,6 +75,15 @@ modelPro38_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Re
 
 
 #Cons
+num_topic = 8
+modelCon8 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+                  data=conPx$meta, init.type="Spectral", 
+                  seed=42)
+
+modelCon8_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+                                 stmobj = modelCon10, metadata = conPx$meta, 
+                                 uncertainty = "Global")
+
 num_topic = 10
 modelCon10 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
                   data=conPx$meta, init.type="Spectral", 
@@ -81,6 +92,17 @@ modelCon10 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings
 modelCon10_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
                                  stmobj = modelCon10, metadata = conPx$meta, 
                                  uncertainty = "Global")
+
+
+num_topic = 12
+modelCon12 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+                  data=conPx$meta, init.type="Spectral", 
+                  seed=42)
+
+modelCon12_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+                                 stmobj = modelCon12, metadata = conPx$meta, 
+                                 uncertainty = "Global")
+
 
 
 num_topic = 16
@@ -125,6 +147,8 @@ run_stminsights()
 # models = load('~/Desktop/R_js/data/stm.RData') 
 # models
 load('~/Desktop/R_js/data/stm.RData') 
+json = createJSON(phi = matrix(), theta = matrix(), doc.length = integer(), vocab = character(), term.frequency = integer(), R = 30, lambda.step = 0.01, mds.method = jsPCA, cluster, plot.opts = list(xlab = "PC1", ylab = "PC2"))
+serVis(json, out.dir = "ldacon12.html", open.browser = interactive())
 
 # Pro Model Analysis
 pro_model = modelPro26
@@ -140,15 +164,15 @@ write_csv(pro_gamma, path="~/Desktop/R_js/data/gamma/pro26_gamma.csv")
 
 
 # Con Model Analysis
-con_model = modelCon10
+con_model = modelCon12
 
 con_beta <- tidy(con_model) #prob that each word is generated from the topic
 con_beta
-write_csv(con_beta, path="~/Desktop/R_js/data/beta/con10_beta.csv")
+write_csv(con_beta, path="~/Desktop/R_js/data/beta/con12_beta.csv")
 
 con_gamma <- tidy(con_model, matrix='gamma')
 con_gamma
-write_csv(con_gamma, path="~/Desktop/R_js/data/gamma/con10_gamma.csv")
+write_csv(con_gamma, path="~/Desktop/R_js/data/gamma/con12_gamma.csv")
 
 
 
