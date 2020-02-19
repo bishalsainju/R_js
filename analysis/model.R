@@ -6,6 +6,14 @@ library(LDAvis)
 library(tidyverse)
 library(tidytext)
 
+install.packages('stm')
+install.packages('igraph')
+install.packages('stmCorrViz')
+install.packages('dplyr')
+install.packages('LDAvis')
+install.packages('tidyverse')
+install.packages('tidytext')
+
 ### Data Reading
 proFilePath = "~/Desktop/R_js/data/pro_doc_sampled.csv"
 conFilePath = "~/Desktop/R_js/data/con_doc_sampled.csv"
