@@ -42,43 +42,42 @@ conPx <- prepDocuments(conProcessed$documents, conProcessed$vocab, conProcessed$
 #### Training STM model
 
 ##Pros
-num_topic = 26
-modelPro26 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
-                       data=proPx$meta, init.type="Spectral", 
-                       seed=42)
-
-modelPro26_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
-                                 stmobj = modelPro26, metadata = proPx$meta, 
-                                 uncertainty = "Global")
-
-
 num_topic = 8
-modelPro8 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+modelPro8 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Job_Status, 
                   data=proPx$meta, init.type="Spectral", 
                   seed=42)
 
-modelPro8_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+modelPro8_cov <- estimateEffect(formula = 1:num_topic ~Job_Status, 
                                  stmobj = modelPro8, metadata = proPx$meta, 
                                  uncertainty = "Global")
 
-
-num_topic = 16
-modelPro16 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+num_topic = 12
+modelPro12 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Job_Status, 
                  data=proPx$meta, init.type="Spectral", 
                  seed=42)
 
-modelPro16_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+modelPro12_cov <- estimateEffect(formula = 1:num_topic ~Job_Status, 
+                                stmobj = modelPro8, metadata = proPx$meta, 
+                                uncertainty = "Global")
+
+
+num_topic = 16
+modelPro16 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Job_Status, 
+                 data=proPx$meta, init.type="Spectral", 
+                 seed=42)
+
+modelPro16_cov <- estimateEffect(formula = 1:num_topic ~ Job_Status, 
                                 stmobj = modelPro16, metadata = proPx$meta, 
                                 uncertainty = "Global")
 
 
-num_topic = 38
-modelPro38 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+num_topic = 20
+modelPro20 <- stm(proPx$documents, proPx$vocab, K=num_topic, prevalence=~Job_Status, 
                   data=proPx$meta, init.type="Spectral", 
                   seed=42)
 
-modelPro38_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
-                                 stmobj = modelPro38, metadata = proPx$meta, 
+modelPro20_cov <- estimateEffect(formula = 1:num_topic ~Job_Status, 
+                                 stmobj = modelPro20, metadata = proPx$meta, 
                                  uncertainty = "Global")
 
 
@@ -132,7 +131,7 @@ save.image('~/Desktop/R_js/data/stm-con.RData')
 load('~/Desktop/R_js/data/stm.RData') 
 
 
-# Pro Model Analysis
+# Model Analysis
 model = modelCon16
 
 beta <- tidy(model) #prob that each word is generated from the topic
