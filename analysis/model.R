@@ -6,13 +6,13 @@ library(LDAvis)
 library(tidyverse)
 library(tidytext)
 
-install.packages('stm')
-install.packages('igraph')
-install.packages('stmCorrViz')
-install.packages('dplyr')
-install.packages('LDAvis')
-install.packages('tidyverse')
-install.packages('tidytext')
+# install.packages('stm')
+# install.packages('igraph')
+# install.packages('stmCorrViz')
+# install.packages('dplyr')
+# install.packages('LDAvis')
+# install.packages('tidyverse')
+# install.packages('tidytext')
 
 ### Data Reading
 proFilePath = "~/Desktop/R_js/data/pro_doc_sampled.csv"
@@ -36,8 +36,8 @@ conProcessed <- textProcessor(conData$Px_Texts, metadata = conData, lowercase = 
 proPx <- prepDocuments(proProcessed$documents, proProcessed$vocab, proProcessed$meta)
 conPx <- prepDocuments(conProcessed$documents, conProcessed$vocab, conProcessed$meta)
 
-proPx["docs.removed"]
-conPx["docs.removed"]
+# proPx["docs.removed"]
+# conPx["docs.removed"]
 
 #### Training STM model
 
@@ -84,105 +84,62 @@ modelPro38_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Re
 
 #Cons
 num_topic = 8
-modelCon8 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+modelCon8 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Job_Status, 
                   data=conPx$meta, init.type="Spectral", 
                   seed=42)
 
-modelCon8_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
-                                 stmobj = modelCon10, metadata = conPx$meta, 
-                                 uncertainty = "Global")
-
-num_topic = 10
-modelCon10 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
-                  data=conPx$meta, init.type="Spectral", 
-                  seed=42)
-
-modelCon10_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+modelCon8_cov <- estimateEffect(formula = 1:num_topic ~ Job_Status, 
                                  stmobj = modelCon10, metadata = conPx$meta, 
                                  uncertainty = "Global")
 
 
 num_topic = 12
-modelCon12 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+modelCon12 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Job_Status, 
                   data=conPx$meta, init.type="Spectral", 
                   seed=42)
 
-modelCon12_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+modelCon12_cov <- estimateEffect(formula = 1:num_topic ~Job_Status, 
                                  stmobj = modelCon12, metadata = conPx$meta, 
                                  uncertainty = "Global")
 
 
 
 num_topic = 16
-modelCon16 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+modelCon16 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Job_Status, 
                   data=conPx$meta, init.type="Spectral", 
                   seed=42)
 
-modelCon16_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
+modelCon16_cov <- estimateEffect(formula = 1:num_topic ~ Job_Status, 
                                  stmobj = modelCon16, metadata = conPx$meta, 
                                  uncertainty = "Global")
 
 
-num_topic = 24
-modelCon24 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
+num_topic = 20
+modelCon20 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Job_Status, 
                   data=conPx$meta, init.type="Spectral", 
                   seed=42)
 
-modelCon24_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
-                                 stmobj = modelCon24, metadata = conPx$meta, 
-                                 uncertainty = "Global")
-
-
-num_topic = 38
-modelCon38 <- stm(conPx$documents, conPx$vocab, K=num_topic, prevalence=~Ratings+Job_Status+Reviewed_Year, 
-                  data=conPx$meta, init.type="Spectral", 
-                  seed=42)
-
-modelCon38_cov <- estimateEffect(formula = 1:num_topic ~ Ratings + Job_Status+Reviewed_Year, 
-                                 stmobj = modelCon38, metadata = conPx$meta, 
+modelCon20_cov <- estimateEffect(formula = 1:num_topic ~ Job_Status, 
+                                 stmobj = modelCon20, metadata = conPx$meta, 
                                  uncertainty = "Global")
 
 
 ### Saving the model
-save.image('~/Desktop/R_js/data/stm.RData')
-
-# A Shiny Application for STM 
-library(stminsights)
-run_stminsights()
+save.image('~/Desktop/R_js/data/stm-con.RData')
 
 
 ### Load the model
-# models = load('~/Desktop/R_js/data/stm.RData') 
-# models
 load('~/Desktop/R_js/data/stm.RData') 
-json = createJSON(phi = matrix(), theta = matrix(), doc.length = integer(), vocab = character(), term.frequency = integer(), R = 30, lambda.step = 0.01, mds.method = jsPCA, cluster, plot.opts = list(xlab = "PC1", ylab = "PC2"))
-serVis(json, out.dir = "ldacon12.html", open.browser = interactive())
+
 
 # Pro Model Analysis
-pro_model = modelPro26
-pro_model
+model = modelCon16
 
-pro_beta <- tidy(pro_model) #prob that each word is generated from the topic
-pro_beta
-write_csv(pro_beta, path="~/Desktop/R_js/data/beta/pro26_beta.csv")
+beta <- tidy(model) #prob that each word is generated from the topic
+write_csv(pro_beta, path="~/Desktop/R_js/data/beta/con16_beta.csv")
 
-pro_gamma <- tidy(pro_model, matrix='gamma')
-pro_gamma
-write_csv(pro_gamma, path="~/Desktop/R_js/data/gamma/pro26_gamma.csv")
-
-
-# Con Model Analysis
-con_model = modelCon12
-
-con_beta <- tidy(con_model) #prob that each word is generated from the topic
-con_beta
-write_csv(con_beta, path="~/Desktop/R_js/data/beta/con12_beta.csv")
-
-con_gamma <- tidy(con_model, matrix='gamma')
-con_gamma
-write_csv(con_gamma, path="~/Desktop/R_js/data/gamma/con12_gamma.csv")
-
-
+gamma <- tidy(model, matrix='gamma')
+write_csv(gamma, path="~/Desktop/R_js/data/gamma/con16_gamma.csv")
 
 
 
