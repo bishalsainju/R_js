@@ -8,14 +8,14 @@ library(LDAvis)
 load('~/Desktop/R_js/data/stm-combo.RData')
 
 # Pro-Con Model Analysis
-num_topic = 20
-model = model20
-model_cov = model20_cov
+num_topic = 16
+model = model16
+model_cov = model16_cov
 proconPx = proconPx
 
 
 # LDA viz
-toLDAvis(model, dataPx$documents, R=30 )
+toLDAvis(model, proconPx$documents, R=30 )
 
 
 #Summary
@@ -26,12 +26,12 @@ plot(model, type="perspectives", topics=c(3,5))
 
 
 # Topic Quality
-topicQuality(mdoel, docs, xlab="Semantic Coherence", 
+topicQuality(model, docs, xlab="Semantic Coherence", 
             ylab="Exclusivity", labels=1:num_topic)
 
 
 # Topic Correlations
-corr <- topicCorr(mdoel, method="simple", cutoff=.2)
+corr <- topicCorr(model, method="simple", cutoff=.2)
 plot(corr, vlabels = c(1:num_topic))
 
 
@@ -46,7 +46,7 @@ plot(model_cov, covariate = "Job_Status", topics = model_cov$topics,
      cov.value1 = 1, cov.value2 = 0, labeltype = "custom", custom.labels = 1:num_topic)
 
 plot(model_cov, covariate = "Pro_Con", topics = model_cov$topics,
-     model = model, method="difference", xlab="Former ............ Current",
+     model = model, method="difference", xlab="Pro ............ Con",
      main="Pro vs Con",
      cov.value1 = "con", cov.value2 = "pro", labeltype = "custom", custom.labels = 1:num_topic)
 
