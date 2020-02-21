@@ -58,7 +58,7 @@ model20 <- stm(proconPx$documents, proconPx$vocab, K=num_topic, prevalence=~ Pro
                        seed=42)
 
 model20_cov <- estimateEffect(formula = 1:num_topic ~Pro_Con+Job_Status, 
-                                 stmobj = model16, metadata = proconPx$meta, 
+                                 stmobj = model20, metadata = proconPx$meta, 
                                  uncertainty = "Global")
 
 plot(model20_cov, covariate = "Pro_Con", topics = model20_cov$topics,
@@ -76,6 +76,7 @@ load('~/Desktop/R_js/data/stm-combo.RData')
 
 
 ### Converting estimates to df and save to csv
+num_topic = 16
 a <- summary(model16_cov)
 vals <- t(sapply(1:num_topic, function(i) c(i, 
                                             a[["tables"]][[i]]["Pro_Conpro", "Estimate"],
@@ -89,16 +90,14 @@ colnames(vals)=c('Topic_Num','Pro_Con', 'Pro_Con_p', 'Job_Status', 'Job_Status_p
 df = as.data.frame(vals)
 df
 
-write.csv(df,"~/Desktop/R_js/data1/estimates/combo.csv")
+write.csv(df,"~/Desktop/R_js/data1/estimates/combo-16.csv")
 
 
 # Beta - Gamma
-pro_beta <- tidy(pro_model) #prob that each word is generated from the topic
-pro_beta
-write_csv(pro_beta, path="~/Desktop/R_js/data/beta/procon12_beta.csv")
+beta <- tidy(model20) #prob that each word is generated from the topic
+write_csv(beta, path="~/Desktop/R_js/data1/beta/procon20_beta.csv")
 
-pro_gamma <- tidy(pro_model, matrix='gamma')
-pro_gamma
-write_csv(pro_gamma, path="~/Desktop/R_js/data/gamma/procon12_gamma.csv")
+gamma <- tidy(model20, matrix='gamma')
+write_csv(gamma, path="~/Desktop/R_js/data1/gamma/procon20_gamma.csv")
 
 
